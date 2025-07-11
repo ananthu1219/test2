@@ -1,12 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>hello</h1>
-    <script src="script.js"></script>
+
+  <h1>📊 Student Dashboard</h1>
+
+  <!-- 🔍 Search Box -->
+  <input type="text" id="searchInput" placeholder="Search student by name...">
+
+  <div class="stats" id="stats"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="studentTableBody"></tbody>
+  </table>
+
+  <script>
+    const students = [
+      { name: "Arjun", age: 20, passed: true },
+      { name: "Meera", age: 17, passed: false },
+      { name: "Rahul", age: 18, passed: true },
+      { name: "Divya", age: 16, passed: false }
+    ];
+
+    const tbody = document.getElementById("studentTableBody");
+    const stats = document.getElementById("stats");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderTable(filteredStudents) {
+      tbody.innerHTML = "";
+      filteredStudents.forEach(student => {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = student.name;
+
+        const ageCell = document.createElement("td");
+        ageCell.textContent = student.age;
+
+        const statusCell = document.createElement("td");
+        statusCell.textContent = student.passed ? "✅ Passed" : "❌ Failed";
+        statusCell.className = student.passed ? "passed" : "failed";
+
+        row.appendChild(nameCell);
+        row.appendChild(ageCell);
+        row.appendChild(statusCell);
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateStats(data) {
+      const total = data.length;
+      const passed = data.filter(s => s.passed).length;
+      const failed = total - passed;
+      stats.innerHTML = `👥 Total: ${total} | ✅ Passed: ${passed} | ❌ Failed: ${failed}`;
+    }
+
+    // Initial render
+    renderTable(students);
+    updateStats(students);
+
+    // 🔍 Search filter
+    searchInput.addEventListener("input", () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = students.filter(s => s.name.toLowerCase().includes(searchTerm));
+      renderTable(filtered);
+      updateStats(filtered);
+    });
+  </script>
+
 </body>
-</html>
